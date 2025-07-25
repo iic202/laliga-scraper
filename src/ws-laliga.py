@@ -240,9 +240,17 @@ class LaLigaScraper:
 
 
 def main():
+    while True:
+        try:
+            season = input("[?] Which La Liga season do you want to scrape? (default: 2019): ").strip() or "2019"
+            digit = int(season)
+            if digit < 2003 or digit > 2025:
+                print("[-] Invalid season! Please enter a year between 2003 and 2025.")
+                continue
+            break
+        except ValueError:
+            print("[-] Invalid input! Please enter a valid year.")
     
-    season = input("[?] Which La Liga season do you want to scrape? (default: 2019): ").strip() or "2019"
-
     scraper = LaLigaScraper(season=season)
     
     df = scraper.scrape()
