@@ -27,25 +27,10 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Basic Usage
-
-Run the scraper for the 2019 season (default):
+Run the scraper for the 2019 season (default), you will we asked to enter your desired season between 2003 and 2025.
 
 ```bash
 python ws-laliga.py
-```
-
-### Custom Season
-
-To scrape a different season, modify the `season` variable in the `main()` function:
-
-```python
-def main():
-    # Change this to your desired season
-    season = "2020"  # or "2021", "2022", etc.
-    
-    scraper = LaLigaScraper(season=season)
-    df = scraper.scrape()
 ```
 
 ## Output
@@ -71,23 +56,6 @@ The scraper generates:
 | goal_difference | Goal difference (+/-) |
 | points | Total points |
 
-
-## How It Works
-
-The scraper uses a sophisticated multi-method approach:
-
-1. **Primary Method**: Parses ESPN's dual-table structure (team names + statistics)
-2. **Fallback Methods**: CSS selectors and generic table parsing
-3. **Data Validation**: Checks for expected team count and famous teams
-4. **Error Handling**: Graceful fallbacks and detailed error reporting
-
-### Anti-Bot Measures
-
-- Uses realistic browser headers (Safari/macOS)
-- Implements request delays
-- Handles redirects and timeouts
-- Multiple extraction strategies
-
 ## URL Format
 
 ESPN URLs follow this pattern:
@@ -102,16 +70,9 @@ https://espndeportes.espn.com/futbol/posiciones/_/liga/ESP.1/temporada/{YEAR}
 - Use delays between requests to avoid overloading servers
 - Consider ESPN's public API if available for commercial use
 
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-This means you can freely use, modify, and distribute this code for personal, educational, or commercial purposes, as long as you include the original license notice.
-
 ---
 
 **Note**: This scraper relies on ESPN Deportes' current HTML structure. If ESPN changes their website layout, the scraper may need updates.
