@@ -153,6 +153,7 @@ class LaLigaScraper:
                     
                     # Create team data
                     team_data = {
+                        'season': self.season,
                         'position': position,
                         'team': team_name,
                         'games_played': stats[0],
@@ -242,14 +243,27 @@ class LaLigaScraper:
 def main():
     while True:
         try:
-            season = input("[?] Which La Liga season do you want to scrape? (default: 2019): ").strip() or "2019"
+            season = input("[?] Which La Liga season do you want to scrape? (default: 2019) or enter year 0 to scrape all seasons: ").strip() or "2019"
             digit = int(season)
+            if digit == 0:
+                break
+
+
             if digit < 2003 or digit > 2025:
                 print("[-] Invalid season! Please enter a year between 2003 and 2025.")
                 continue
             break
         except ValueError:
             print("[-] Invalid input! Please enter a valid year.")
+
+    if digit == 0:
+        print("[+] Scraping all seasons from 2003 to 2025...")
+        all_seasons_data = fetch_all_seasons()
+        if all_seasons_data:
+            print(f"[+] Successfully scraped {len(all_seasons_data)} seasons!")
+        else:
+            print("[-] No data scraped for any season.")
+        return
     
     scraper = LaLigaScraper(season=season)
     
@@ -260,6 +274,15 @@ def main():
         print(f"[+] Points leader: {df.iloc[0]['team']} with {df.iloc[0]['points']} points")
     else:
         print("\n[-] Scraping failed")
+
+def fetch_all_seasons():
+    seasons = []
+    for year in range(2003, 2025):
+        scraper = LaLigaScraper(season=str(year))
+        df = scraper.scrape()
+        if df is not None:
+            seasons.append(df)
+    return seasons
 
 
 if __name__ == "__main__":
