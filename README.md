@@ -1,6 +1,6 @@
 # ESPN La Liga Standings Scraper
 
-A comprehensive web scraper for extracting La Liga football standings from ESPN Deportes. This scraper can extract complete season data including team positions, statistics, and points for any La Liga season.
+A web scraper for extracting La Liga football standings from ESPN Deportes. This scraper can extract complete season data including team positions, statistics, and points for any La Liga season.
 
 ## Features
 
@@ -23,11 +23,10 @@ pip install -r requirements.txt
 - `requests` - For HTTP requests
 - `beautifulsoup4` - For HTML parsing
 - `pandas` - For data manipulation and CSV export
-- `lxml` - For improved HTML parsing performance
 
 ## Usage
 
-Run the scraper for the 2019 season (default), you will we asked to enter your desired season between 2003 and 2025.
+Run with the command shown below, you will we asked to enter your desired season between 2003 and 2025 (default season is 2019).
 
 ```bash
 python ws-laliga.py
@@ -45,6 +44,7 @@ The scraper generates:
 
 | Column | Description |
 |--------|-------------|
+| season | League season (2003-2024)
 | position | League position (1-20) |
 | team | Team name |
 | games_played | Number of games played |
@@ -73,6 +73,7 @@ https://espndeportes.espn.com/futbol/posiciones/_/liga/ESP.1/temporada/{YEAR}
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ---
 
 **Note**: This scraper relies on ESPN Deportes' current HTML structure. If ESPN changes their website layout, the scraper may need updates.
