@@ -1,0 +1,9 @@
+[FORMAT]
+max-line-length=160
+
+[DESIGN]
+max-nested-blocks=6
+
+[MESSAGES CONTROL]
+disable=
+    line-too-long
