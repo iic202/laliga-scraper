@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from combine_csv import combine_csvs
+import glob
 import time
 import re
 import os
@@ -63,7 +65,6 @@ class LaLigaScraper:
         return cleaned
 
     def extract_standings_data(self, soup: BeautifulSoup) -> List[Dict]:
-        print("\n[?] Extracting standings data...")
         teams_data = []
         table = soup.find('table', class_='Table')
         if table:
@@ -72,7 +73,6 @@ class LaLigaScraper:
         else:
             print("[-] No standings table found")
 
-        print(f"\n[??] Extracted data for {len(teams_data)} teams")
         return teams_data
 
     def _extract_from_table(self, table) -> List[Dict]:
@@ -176,10 +176,8 @@ class LaLigaScraper:
             print(f"[-] Expected 20 teams, got {len(teams_data)}")
 
         positions = [team['position'] for team in teams_data]
-        if positions == list(range(1, len(teams_data) + 1)):
-            print("[+] Positions are sequential")
-        else:
-            print(f"[-] Positions not sequential")
+        if positions != list(range(1, len(teams_data) + 1)):
+            print("[-] Positions are not sequential")
 
     def save_to_csv(self, teams_data: List[Dict], filename: Optional[str] = None) -> str:
 
@@ -201,7 +199,13 @@ class LaLigaScraper:
         return full_path
 
     def scrape(self) -> Optional[pd.DataFrame]:
-        print(f"[+] Starting La Liga {self.season} scraper")
+    
+        existing_files = glob.glob(f"data/laliga/laliga_{self.season}_standings.csv")
+        if existing_files:
+            print(f"[!] Data for season {self.season} already exists. Skipping scrape.")
+            return None
+        
+        print(f"\n[+] Starting La Liga {self.season} scraper")
         print("=" * 60)
 
         # Step 1: Fetch page
@@ -223,7 +227,6 @@ class LaLigaScraper:
         # Step 5: Return DataFrame
         df = pd.DataFrame(teams_data).sort_values('position')
 
-        print(f"[+] Scraping completed! Data saved to {filename}")
         return df
 
 
@@ -234,7 +237,6 @@ def main():
             digit = int(season)
             if digit == 0:
                 break
-
 
             if digit < 2003 or digit > 2025:
                 print("[-] Invalid season! Please enter a year between 2003 and 2025.")
@@ -248,6 +250,15 @@ def main():
         all_seasons_data = fetch_all_seasons()
         if all_seasons_data:
             print(f"[+] Successfully scraped {len(all_seasons_data)} seasons!")
+            while True:
+                try:
+                    output_file = input("[?] Enter output file name (default: all_seasons.csv): ").strip() or "all_seasons.csv"
+                    combine_csvs(directory_path="data/laliga", output_file=output_file, add_source_column=False)
+                    print(f"[+] Combined data saved to {output_file}")
+                    break
+                except Exception as e:
+                    print(f"[-] Error combining CSVs: {e}")
+                    continue
         else:
             print("[-] No data scraped for any season.")
         return
@@ -258,8 +269,25 @@ def main():
     if df is not None:
         print(f"[+] Successfully scraped {len(df)} teams!")
         print(f"[+] Points leader: {df.iloc[0]['team']} with {df.iloc[0]['points']} points")
+        
+        csv_files = glob.glob(f"data/laliga/*.csv")
+
+        if csv_files and len(csv_files) > 1:
+
+            while True:
+                try:
+                    output_file = input("[?] Enter output file name (default: combined_seasons.csv): ").strip() or f"combined_seasons.csv"
+                    combine_csvs(directory_path="data/laliga", output_file=output_file, add_source_column=False)
+                    print(f"[+] Combined data saved to {output_file}")
+                    break
+                except Exception as e:
+                    print(f"[-] Error combining CSVs: {e}")
+                    continue
+        else:
+            print("[-] No CSV files found to combine.")
+               
     else:
-        print("\n[-] Scraping failed")
+        print("[-] Scraping failed or csv file already exists for respective season.")
 
 def fetch_all_seasons():
     seasons = []
