@@ -6,7 +6,7 @@ A web scraper for extracting La Liga football standings from ESPN Deportes. This
 
 - Scrape complete La Liga standings for any season from 2003/04 to Current
 - Extract detailed team statistics (games played, wins, draws, losses, goals, points)
-- CSV export
+- CSV export (combined csv export)
 
 
 ## Installation
@@ -37,7 +37,7 @@ python ws-laliga.py
 The scraper generates:
 
 1. **Console Output**: Real-time progress and results
-2. **CSV File**: Complete data saved as `laliga_YYYY_standings.csv`
+2. **CSV File**: Complete data saved as `laliga_YYYY_standings.csv`. You can also combine all fetched csv file into one csv file.
 3. **Pandas DataFrame**: For programmatic data access
 
 ### CSV Structure
